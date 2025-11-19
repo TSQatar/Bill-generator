@@ -23,11 +23,13 @@ uploaded_files = st.file_uploader("Upload Screenshots", type=['png', 'jpg', 'jpe
 
 if uploaded_files:
     if st.button("Generate Bill"):
-        with st.spinner("Processing images..."):
+        with st.status("Processing...", expanded=True) as status:
+            st.write("📤 Reading image files...")
             all_items = []
             
             # Process each image
             for uploaded_file in uploaded_files:
+                st.write(f"🤖 Analyzing {uploaded_file.name} with Gemini AI...")
                 # Save temp file or pass bytes? 
                 # processor.py uses Image.open() which accepts file-like objects.
                 # Streamlit UploadedFile is a file-like object.
@@ -35,8 +37,10 @@ if uploaded_files:
                 all_items.extend(items)
             
             if not all_items:
+                status.update(label="Failed", state="error", expanded=True)
                 st.error("No items could be extracted. Please check the image quality or API key.")
             else:
+                status.update(label="Complete!", state="complete", expanded=False)
                 # Generate Output
                 bill_text, subtotal = format_bill_output(all_items, store_name)
                 df_summary = create_summary_dataframe(all_items)
