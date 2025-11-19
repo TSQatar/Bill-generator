@@ -13,8 +13,7 @@ load_dotenv()
 # Configure Gemini
 GENAI_API_KEY = os.getenv("GOOGLE_API_KEY") or os.getenv("GEMINI_API_KEY")
 if not GENAI_API_KEY:
-    # Fallback for development if env var is missing, though user said they have .env
-    print("Warning: GOOGLE_API_KEY not found in environment variables.")
+    raise ValueError("API Key not found! Please set 'GOOGLE_API_KEY' in Streamlit Secrets.")
 
 genai.configure(api_key=GENAI_API_KEY, transport='rest')
 
@@ -22,7 +21,7 @@ def get_gemini_response(image, prompt):
     """
     Sends image and prompt to Gemini Flash and returns the text response.
     """
-    model = genai.GenerativeModel('gemini-1.5-flash')
+    model = genai.GenerativeModel('gemini-1.5-flash-latest')
     response = model.generate_content([prompt, image])
     return response.text
 
