@@ -52,7 +52,8 @@ if uploaded_files:
                 
                 # Display Results
                 st.subheader("Generated Bill")
-                st.text_area("Copy this text:", value=bill_text, height=400)
+                st.info("👇 Click the copy icon in the top right of the box below!")
+                st.code(bill_text, language="text")
                 
                 st.subheader("Summary Table")
                 st.dataframe(df_summary, use_container_width=True)
