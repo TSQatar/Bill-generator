@@ -21,7 +21,7 @@ def get_gemini_response(image, prompt):
     """
     Sends image and prompt to Gemini Flash and returns the text response.
     """
-    model = genai.GenerativeModel('gemini-1.5-flash-latest')
+    model = genai.GenerativeModel('gemini-2.0-flash')
     response = model.generate_content([prompt, image])
     return response.text
 
