@@ -15,7 +15,7 @@ if not GENAI_API_KEY:
     # Fallback for development if env var is missing, though user said they have .env
     print("Warning: GOOGLE_API_KEY not found in environment variables.")
 
-genai.configure(api_key=GENAI_API_KEY)
+genai.configure(api_key=GENAI_API_KEY, transport='rest')
 
 def get_gemini_response(image, prompt):
     """
