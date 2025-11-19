@@ -134,10 +134,34 @@ def create_summary_dataframe(items):
     Creates a pandas DataFrame for the summary table.
     """
     data = []
+    total_sum = 0.0
+    
     for item in items:
+        price = item.get('price', 0.0)
+        qty = item.get('quantity', 1)
+        line_total = price * qty
+        total_sum += line_total
+        
         data.append({
             "Item": f"{item.get('emoji', '')} {item.get('title', '')}\n{item.get('details', '')}",
-            "Unit Price (QAR)": item.get('price', 0.0),
-            "Qty": item.get('quantity', 1)
+            "Unit Price (QAR)": price,
+            "Qty": qty,
+            "Line Total (QAR)": line_total
         })
-    return pd.DataFrame(data)
+        
+    df = pd.DataFrame(data)
+    
+    # Add Total Row
+    if not df.empty:
+        # Create a DataFrame for the total row to avoid FutureWarning with append
+        total_row = pd.DataFrame([{
+            "Item": "✅ TOTAL (Exact)", 
+            "Unit Price (QAR)": None, 
+            "Qty": None, 
+            "Line Total (QAR)": total_sum
+        }])
+        
+        # Concatenate
+        df = pd.concat([df, total_row], ignore_index=True)
+        
+    return df
