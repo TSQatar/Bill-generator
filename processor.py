@@ -1,5 +1,6 @@
 import os
 import json
+import re
 import math
 import google.generativeai as genai
 from dotenv import load_dotenv
@@ -55,13 +56,18 @@ def extract_data_from_image(image_file):
         response_text = get_gemini_response(image, prompt)
         print(f"DEBUG: Received response from Gemini: {response_text[:100]}...") # Print first 100 chars
         
-        # Clean up potential markdown formatting
-        cleaned_text = response_text.replace("```json", "").replace("```", "").strip()
+        # Clean up potential markdown formatting using Regex
+        match = re.search(r'\[.*\]', response_text, re.DOTALL)
+        if match:
+            cleaned_text = match.group(0)
+        else:
+            cleaned_text = response_text.replace("```json", "").replace("```", "").strip()
+            
         data = json.loads(cleaned_text)
         return data
     except Exception as e:
         print(f"ERROR extracting data: {e}")
-        return []
+        return {"error": str(e)}
 
 def format_bill_output(items, store_name):
     """

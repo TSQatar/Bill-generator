@@ -34,6 +34,11 @@ if uploaded_files:
                 # processor.py uses Image.open() which accepts file-like objects.
                 # Streamlit UploadedFile is a file-like object.
                 items = extract_data_from_image(uploaded_file)
+                
+                if isinstance(items, dict) and "error" in items:
+                    st.error(f"⚠️ Error with {uploaded_file.name}: {items['error']}")
+                    continue
+                    
                 all_items.extend(items)
             
             if not all_items:
