@@ -51,13 +51,16 @@ def extract_data_from_image(image_file):
     """
     
     try:
+        print(f"DEBUG: Sending request to Gemini model: gemini-2.0-flash")
         response_text = get_gemini_response(image, prompt)
+        print(f"DEBUG: Received response from Gemini: {response_text[:100]}...") # Print first 100 chars
+        
         # Clean up potential markdown formatting
         cleaned_text = response_text.replace("```json", "").replace("```", "").strip()
         data = json.loads(cleaned_text)
         return data
     except Exception as e:
-        print(f"Error extracting data: {e}")
+        print(f"ERROR extracting data: {e}")
         return []
 
 def format_bill_output(items, store_name):
